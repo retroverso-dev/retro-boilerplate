@@ -12,6 +12,8 @@ jobs:
   create-release:
     name: Build and Release
     runs-on: ubuntu-latest
+    env:
+      RESOURCE_NAME: ${{ github.event.repository.name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -74,37 +76,41 @@ jobs:
 
       # Create release archive with only the necessary files
       - name: Bundle release
+        id: bundle
         run: |
-          mkdir -p /tmp/retro-boilerplate
+          mkdir -p "/tmp/${RESOURCE_NAME}"
 
           # Copy resource files
-          cp fxmanifest.lua /tmp/retro-boilerplate/
-          cp LICENSE /tmp/retro-boilerplate/
-          cp README.md /tmp/retro-boilerplate/
+          cp fxmanifest.lua "/tmp/${RESOURCE_NAME}/"
+          cp LICENSE "/tmp/${RESOURCE_NAME}/"
+          cp README.md "/tmp/${RESOURCE_NAME}/"
 
           # Copy Lua resource folders
           if [ -d "resource" ]; then
-            cp -r resource /tmp/retro-boilerplate/
+            cp -r resource "/tmp/${RESOURCE_NAME}/"
           fi
 
           # Copy locales
           if [ -d "locales" ]; then
-            cp -r locales /tmp/retro-boilerplate/
+            cp -r locales "/tmp/${RESOURCE_NAME}/"
           fi
 
           # Copy imports
           if [ -d "imports" ]; then
-            cp -r imports /tmp/retro-boilerplate/
+            cp -r imports "/tmp/${RESOURCE_NAME}/"
           fi
 
           # Copy only the built web assets (not source)
-          mkdir -p /tmp/retro-boilerplate/web/dist
-          cp -r web/dist/* /tmp/retro-boilerplate/web/dist/
+          mkdir -p "/tmp/${RESOURCE_NAME}/web/dist"
+          cp -r web/dist/* "/tmp/${RESOURCE_NAME}/web/dist/"
 
           # Create zip
           cd /tmp
-          zip -r retro-boilerplate.zip retro-boilerplate/
+          zip -r "${RESOURCE_NAME}.zip" "${RESOURCE_NAME}/"
 
+          echo "archive=/tmp/${RESOURCE_NAME}.zip" >> "$GITHUB_OUTPUT"
+
+      # Generate changelog
       - name: Generate changelog
         id: changelog
         run: |
@@ -140,8 +146,8 @@ jobs:
             ${{ steps.changelog.outputs.changelog }}
 
             ---
-            Download `retro-boilerplate.zip` and extract it into your FiveM `resources` folder.
-          files: /tmp/retro-boilerplate.zip
+            Download `${{ env.RESOURCE_NAME }}.zip` and extract it into your FiveM `resources` folder.
+          files: ${{ steps.bundle.outputs.archive }}
           generate_release_notes: false
           draft: false
           prerelease: false
