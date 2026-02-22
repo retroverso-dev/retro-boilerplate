@@ -20,20 +20,24 @@ files {
 
 shared_scripts {
     '@retro-kit/init.lua',
-    'shared/config/config.lua',
-    'shared/localization/loader.lua',
-    'shared/localization/locales.lua',
-    'shared/localization/init.lua',
-    'shared/**/*.lua'
+    'src/shared/config/config.lua',
+    'src/shared/localization/loader.lua',
+    'src/shared/localization/locales.lua',
+    'src/shared/localization/init.lua',
+    'src/shared/**/*.lua'
 }
 
 client_scripts {
-    "client/core/init.lua",
-    "client/**/*.lua"
+    "src/client/core/nui.lua",
+    "src/client/core/events.lua",
+    "src/client/core/commands.lua",
+    "src/client/core/init.lua",
+    "src/client/**/*.lua"
 }
 
 server_scripts {
     -- '@oxmysql/lib/MySQL.lua', -- Descomentar se for usar banco de dados
-    "server/core/init.lua",
-    "server/**/*.lua"
+    "src/server/core/events.lua",
+    "src/server/core/init.lua",
+    "src/server/**/*.lua"
 }

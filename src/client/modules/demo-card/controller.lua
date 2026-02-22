@@ -1,0 +1,7 @@
+---
+--- Quando usar o controller?
+--- Imagine que a gente precise ter estado interno, fazer validações, ter animações sincronizadas
+--- disparar eventos pro server, fazer cooldown, ter lógica de negócio
+--- O controller é o lugar ideal pra isso, ele é o cérebro do módulo, onde a gente pode controlar tudo o que acontece
+--- Deixei aqui em branco para servir como exemplo, mas sinta-se livre pra criar o que quiser, esse é o poder do controller
+---
