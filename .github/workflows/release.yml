@@ -85,18 +85,13 @@ jobs:
           cp README.md "/tmp/${RESOURCE_NAME}/"
 
           # Copy Lua resource folders
-          if [ -d "resource" ]; then
-            cp -r resource "/tmp/${RESOURCE_NAME}/"
+          if [ -d "src" ]; then
+            cp -r src "/tmp/${RESOURCE_NAME}/"
           fi
 
           # Copy locales
           if [ -d "locales" ]; then
             cp -r locales "/tmp/${RESOURCE_NAME}/"
-          fi
-
-          # Copy imports
-          if [ -d "imports" ]; then
-            cp -r imports "/tmp/${RESOURCE_NAME}/"
           fi
 
           # Copy only the built web assets (not source)
