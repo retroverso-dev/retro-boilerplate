@@ -1,0 +1,148 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  create-release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Bump version based on commit messages (conventional commits)
+      # feat: → minor bump | fix: → patch bump
+      # Include "BREAKING CHANGE" in the commit body → major bump
+      - name: Bump version
+        id: bump
+        run: |
+          # Pega a última tag, se não existir, usa 0.0.0
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          LAST_VERSION=${LAST_TAG#v}  # Remove o "v" do começo
+
+          echo "Last tag: $LAST_TAG (version: $LAST_VERSION)"
+
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$LAST_VERSION"
+
+          # Pega os commits desde a última tag
+          COMMITS=$(git log "$LAST_TAG"..HEAD --pretty=format:"%s %b" 2>/dev/null || echo "")
+
+          # Determine bump type from conventional commits
+          if echo "$COMMITS" | grep -qiE "BREAKING CHANGE|^break"; then
+            MAJOR=$((MAJOR + 1))
+            MINOR=0
+            PATCH=0
+          elif echo "$COMMITS" | grep -qiE "^feat"; then
+            MINOR=$((MINOR + 1))
+            PATCH=0
+          else
+            PATCH=$((PATCH + 1))
+          fi
+
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          echo "New version: $NEW_VERSION"
+          echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$NEW_VERSION" >> "$GITHUB_OUTPUT"
+
+      # Update version in fxmanifest.lua and package.json
+      - name: Update version files
+        env:
+          TGT_RELEASE_VERSION: ${{ steps.bump.outputs.tag }}
+        run: node .github/actions/bump-manifest-version.js
+
+      - name: Install web dependencies
+        working-directory: web
+        run: npm install
+
+      - name: Build web assets
+        working-directory: web
+        run: npm run build
+
+      # Create release archive with only the necessary files
+      - name: Bundle release
+        run: |
+          mkdir -p /tmp/retro-boilerplate
+
+          # Copy resource files
+          cp fxmanifest.lua /tmp/retro-boilerplate/
+          cp LICENSE /tmp/retro-boilerplate/
+          cp README.md /tmp/retro-boilerplate/
+          cp init.lua /tmp/retro-boilerplate/
+
+          # Copy Lua resource folders
+          if [ -d "resource" ]; then
+            cp -r resource /tmp/retro-boilerplate/
+          fi
+
+          # Copy locales
+          if [ -d "locales" ]; then
+            cp -r locales /tmp/retro-boilerplate/
+          fi
+
+          # Copy imports
+          if [ -d "imports" ]; then
+            cp -r imports /tmp/retro-boilerplate/
+          fi
+
+          # Copy only the built web assets (not source)
+          mkdir -p /tmp/retro-boilerplate/web/dist
+          cp -r web/dist/* /tmp/retro-boilerplate/web/dist/
+
+          # Create zip
+          cd /tmp
+          zip -r retro-boilerplate.zip retro-boilerplate/
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+
+          {
+            echo "changelog<<EOF"
+            if [ -z "$LAST_TAG" ]; then
+              git log --pretty=format:"- %s (%h)" --no-merges | head -50
+            else
+              git log "$LAST_TAG"..HEAD --pretty=format:"- %s (%h)" --no-merges
+            fi
+            echo ""
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      # Create git tag and GitHub release
+      - name: Create tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a ${{ steps.bump.outputs.tag }} -m "Release ${{ steps.bump.outputs.tag }}"
+          git push origin ${{ steps.bump.outputs.tag }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.bump.outputs.tag }}
+          name: ${{ steps.bump.outputs.tag }}
+          body: |
+            ## Changes
+
+            ${{ steps.changelog.outputs.changelog }}
+
+            ---
+            Download `retro-boilerplate.zip` and extract it into your FiveM `resources` folder.
+          files: /tmp/retro-boilerplate.zip
+          generate_release_notes: false
+          draft: false
+          prerelease: false
