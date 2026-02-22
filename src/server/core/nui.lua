@@ -8,7 +8,7 @@ AddEventHandler("app:ready", function()
 
     local nuiConfig = {
         locale = locale,
-        config = config,
+        colors = config.colors,
     }
 
     TriggerClientEvent("app:initData", src, nuiConfig)

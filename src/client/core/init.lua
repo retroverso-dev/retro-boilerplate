@@ -10,7 +10,10 @@ end)
 RegisterNetEvent("app:initData")
 AddEventHandler("app:initData", function(data)
     if data and data.locale then
-        print(("Loaded locale: %s"):format(data.locale.language or "unknown"))
-        Resource.NUI.Send("setLocale", data.locale) -- sem .data
+        Resource.NUI.Send("setLocale", data.locale)
+    end
+
+    if data and data.colors then
+        Resource.NUI.Send("setConfig", data.colors)
     end
 end)
