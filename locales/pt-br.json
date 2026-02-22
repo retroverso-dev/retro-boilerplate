@@ -2,7 +2,7 @@
   "language": "Português (Brasil)",
   "ui": {
     "demo": {
-      "title": "Demonstração de IU",
+      "title": "Demonstração de UI",
       "paragraphs": [
         "Este é um exemplo de parágrafo para demonstrar a internacionalização da interface do usuário. Você pode substituir este texto por qualquer conteúdo que desejar.",
         "A internacionalização permite que sua aplicação seja acessível a usuários de diferentes idiomas e regiões, melhorando a experiência do usuário e ampliando o alcance do seu produto."

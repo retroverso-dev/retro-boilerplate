@@ -1,14 +1,15 @@
 Resource = Resource or {}
 Resource.LocaleLoader = {}
 
-function Resource.LocaleLoader.Load(localeName)
+function Resource.LocaleLoader.Load(localeName, resourceName)
     localeName = localeName or "en"
+    resourceName = resourceName or GetCurrentResourceName()
 
-    local localeData = LoadResourceFile(GetCurrentResourceName(), "locales/" .. localeName .. ".json")
+    local localeData = LoadResourceFile(resourceName, "locales/" .. localeName .. ".json")
 
     if not localeData then
         print(("^3[retro-kit]^7 Locale '%s' not found, fallback to 'en'"):format(localeName))
-        localeData = LoadResourceFile(GetCurrentResourceName(), "locales/en.json")
+        localeData = LoadResourceFile(resourceName, "locales/en.json")
     end
 
     if not localeData then

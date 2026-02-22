@@ -3,8 +3,8 @@ Resource.Locale = {
     data = {}
 }
 
-function Resource.Locale.Init(localeName)
-    Resource.Locale.data = Resource.LocaleLoader.Load(localeName) or {}
+function Resource.Locale.Init(localeName, resourceName)
+    Resource.Locale.data = Resource.LocaleLoader.Load(localeName, resourceName) or {}
 end
 
 function Resource.Locale.T(key)

@@ -5,6 +5,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import { useNuiEvent } from "@/hooks/useNuiEvent";
 import { useLocales } from "@/providers/LocaleProvider";
 import { fetchNui } from "@/utils/fetchNui";
@@ -23,24 +24,30 @@ const DemoCard: React.FC = () => {
     fetchNui("demo-card:close");
   };
 
+  if (!locale) return null;
+
   return (
     <Card
-      className={`xax-w-200 m-auto bg-card/70 ${visible ? "block" : "hidden"}`}
+      className={`max-w-200 m-auto bg-card-70 ${visible ? "block" : "hidden"}`}
     >
-      <CardHeader>
+      <CardHeader className="pb-4">
         <h1 className="text-2xl text-center font-bold">
           {locale.ui.demo.title}
         </h1>
       </CardHeader>
-      <CardContent className="flex flex-col gap-4">
+      <Separator />
+      <CardContent className="flex flex-col gap-4 py-8">
         {locale.ui.demo.paragraphs.map((paragraph, index) => (
           <p key={index} className="text-center">
             {paragraph}
           </p>
         ))}
       </CardContent>
-      <CardFooter className="m-auto">
-        <Button onClick={closeCard}>{locale.ui.demo.button}</Button>
+      <Separator />
+      <CardFooter className="m-auto pt-4">
+        <Button onClick={closeCard} className="m-auto">
+          {locale.ui.demo.button}
+        </Button>
       </CardFooter>
     </Card>
   );

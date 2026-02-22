@@ -15,6 +15,7 @@ dependencies {
 ui_page 'web/dist/index.html'
 
 files {
+    'locales/*.json',
     'web/dist/**/*'
 }
 
@@ -22,7 +23,7 @@ shared_scripts {
     '@retro-kit/init.lua',
     'src/shared/config/config.lua',
     'src/shared/localization/loader.lua',
-    'src/shared/localization/locales.lua',
+    'src/shared/localization/locale.lua',
     'src/shared/localization/init.lua',
     'src/shared/**/*.lua'
 }

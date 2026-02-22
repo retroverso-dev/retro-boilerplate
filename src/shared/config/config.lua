@@ -1,3 +1,4 @@
 Config = {}
 
-Config.Locale = "en" -- Default locale, can be overridden by environment variable or user settings
+Config.Locale = "pt-br" -- Default locale, can be overridden by environment variable or user settings
+Config.Debug = true -- Enable debug mode for additional logging and features

@@ -43,12 +43,15 @@ const LocaleProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [locale, setLocale] = useState<Locale>({
-    language: "",
+    language: "en",
     ui: {
       demo: {
-        title: "",
-        paragraphs: [],
-        button: "",
+        title: "UI Demo",
+        paragraphs: [
+          "This is a sample paragraph to demonstrate user interface internationalization. You can replace this text with any content you like.",
+          "Internationalization allows your application to be accessible to users of different languages and regions, improving the user experience and expanding the reach of your product.",
+        ],
+        button: "Close",
       },
     },
   });
