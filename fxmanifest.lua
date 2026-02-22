@@ -20,6 +20,10 @@ files {
 
 shared_scripts {
     '@retro-kit/init.lua',
+    'shared/config/config.lua',
+    'shared/localization/loader.lua',
+    'shared/localization/locales.lua',
+    'shared/localization/init.lua',
     'shared/**/*.lua'
 }
 

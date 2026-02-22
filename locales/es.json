@@ -1,0 +1,13 @@
+{
+  "language": "Español",
+  "ui": {
+    "demo": {
+      "title": "Demostración de IU",
+      "paragraphs": [
+        "Este es un ejemplo de párrafo para demostrar la internacionalización de la interfaz de usuario. Puedes reemplazar este texto con cualquier contenido que desees.",
+        "La internacionalización permite que tu aplicación sea accesible a usuarios de diferentes idiomas y regiones, mejorando la experiencia del usuario y ampliando el alcance de tu producto."
+      ],
+      "button": "Cerrar"
+    }
+  }
+}
