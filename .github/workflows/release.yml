@@ -82,7 +82,6 @@ jobs:
 
           # Copy resource files
           cp fxmanifest.lua "/tmp/${RESOURCE_NAME}/"
-          cp LICENSE "/tmp/${RESOURCE_NAME}/"
           cp README.md "/tmp/${RESOURCE_NAME}/"
 
           # Copy Lua resource folders
