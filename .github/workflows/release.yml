@@ -81,7 +81,6 @@ jobs:
           cp fxmanifest.lua /tmp/retro-boilerplate/
           cp LICENSE /tmp/retro-boilerplate/
           cp README.md /tmp/retro-boilerplate/
-          cp init.lua /tmp/retro-boilerplate/
 
           # Copy Lua resource folders
           if [ -d "resource" ]; then
