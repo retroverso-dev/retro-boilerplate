@@ -42,3 +42,7 @@ server_scripts {
     "src/server/core/init.lua",
     "src/server/**/*.lua"
 }
+
+escrow_ignore {
+    "src/shared/config/config.lua",
+}
